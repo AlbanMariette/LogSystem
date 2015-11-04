@@ -2,6 +2,7 @@
 #define LOGGER_H
 /*INCLUSIONS*/
 /*FIN INCLUSIONS*/
+class LogContent;
 enum LogLevel
 {
     LEVEL_TRACE,
@@ -14,12 +15,14 @@ enum LogLevel
 class Logger
 {
 public:
-    Logger();
+    Logger(LogLevel minLevel);
     Logger(const Logger& copy);
     Logger(Logger&& moved);
     ~Logger();
     std::map<std::string,Appender*>&& Move();
 private:
+    /*le niveau de log minimum*/
+    LogLevel _minLogLevel;
     /*les appenders*/
     std::map<std::string,Appender*> _appendersMap;
 };

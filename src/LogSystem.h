@@ -20,39 +20,40 @@ public:
     bool deleteLogger(std::string& name);
     /*ECRITURE*/
     template <class ... Args>
-    void trace(std::string& name,Args &&... args)
+    void trace(const std::string& name,Args &&... args)
     {
         write(name,LogLevel::LEVEL_TRACE,std::forward<Args>(args)...);
     }
     template <class ... Args>
-    void warning(std::string& name,Args &&... args)
+    void warning(const std::string& name,Args &&... args)
     {
         write(name,LogLevel::LEVEL_WARNING,std::forward<Args>(args)...);
     }
     template <class ... Args>
-    void info(std::string& name,Args &&... args)
+    void info(const std::string& name,Args &&... args)
     {
         write(name,LogLevel::LEVEL_INFO,std::forward<Args>(args)...);
     }
     template <class ... Args>
-    void error(std::string& name,Args &&... args)
+    void error(const std::string& name,Args &&... args)
     {
         write(name,LogLevel::LEVEL_ERROR,std::forward<Args>(args)...);
     }
     template <class ... Args>
-    void critical(std::string& name,Args &&... args)
+    void critical(const std::string& name,Args &&... args)
     {
         write(name,LogLevel::LEVEL_CRITICAL,std::forward<Args>(args)...);
     }
 private:
     /*ecriture generale*/
     template <class ... Args>
-    void write(std::string& name,LogLevel& level,Args &&... args)
+    void write(const std::string& name,LogLevel& level,Args &&... args)
     {
         cout << "Inmpression de " << sizeof...(Args) << " parametres: ";
         std::ostringstream stream;
 		print(stream, std::forward<Args>(args)...);
         std::unique_ptr<LogContent> msg(new LogContent(level,stream));
+        writeOnLogger(name,msg);
     }
     template <class T, class ... Args>
     void print(std::ostringstream& stream,const T & val,const Args &... args)
@@ -65,6 +66,7 @@ private:
 	{
 		stream <<val;
 	}
+    void writeOnLogger(const std::string& name,std::unique_ptr<LogMessage>& msg);
     /*map contenant les loggers classés selon leur nom*/
     std::map<std::string,Logger*> _loggersMap;
 
