@@ -3,6 +3,11 @@
 /*INCLUSIONS*/
 /*FIN INCLUSIONS*/
 class LogContent;
+class Appender;
+/*
+@enum LogLevel
+@brief enumeration representant les niveaux de log
+*/
 enum LogLevel
 {
     LEVEL_TRACE,
@@ -12,15 +17,73 @@ enum LogLevel
     LEVEL_CRITICAL
 
 };
+/*
+@class Logger
+@brief classe representant une "interface" de log.
+*/
 class Logger
 {
 public:
-    Logger(LogLevel minLevel);
+    /*
+    @fn Logger(const std::string& name,LogLevel minLevel)
+    @params name une reference constante sur une chaine de caractere representant le nom du logger
+            minLevel le niveau de log minimum accepté
+    @brief constructeur
+    @return no return
+    */
+    Logger(const std::string& name,LogLevel minLevel);
+    /*
+    @fn Logger(const Logger& copy)
+    @params copy reference constante sur le Logger à copier
+    @brief constructeur de copie
+    @return no return
+    */
     Logger(const Logger& copy);
+    /*
+    @fn Logger(Logger&& moved)
+    @params moved reference de déplacement sur le Logger à copier
+    @brief constructeur de déplacement
+    @return no return
+    */
     Logger(Logger&& moved);
+    /*
+    @fn ~Logger()
+    @params no params
+    @brief destructeur
+    @return no return
+    */
     ~Logger();
+    /*
+    @fn std::map<std::string,Appender*>&& Move()
+    @params no params
+    @brief methode permettant le deplacement du Logger
+    @return std::map<std::string,Appender*>&& une refernce de deplacement sur une map
+    */
     std::map<std::string,Appender*>&& Move();
+    /*
+    @fn bool shouldLogLevel(const LogLevel& levelToTest)
+    @params no params
+    @brief methode permettant de vérifier si un niveau de log est accepté ou non
+    @return bool true si le niveau de log est accepté, false sinon
+    */
+    bool shouldLogLevel(const LogLevel& levelToTest);
+    /*
+    @fn const std::string& getName()
+    @params no params
+    @brief methode retournant le nom du Logger
+    @return const std::string&
+    */
+    const std::string& getName();
+    /*
+    @fn void write(LogContent& content)
+    @params content reference sur un objet LogContent
+    @brief methode permettant de logger un contenu
+    @return void
+    */
+    void write(LogContent& content);
 private:
+    /*le nom du logger*/
+    std::string _name;
     /*le niveau de log minimum*/
     LogLevel _minLogLevel;
     /*les appenders*/

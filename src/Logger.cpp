@@ -1,15 +1,21 @@
 #include "Logger.h"
-
-Logger::Logger(LogLevel minLevel) : _minLogLevel(minLevel)
+#include "LogContent.h"
+#include "Appender.h"
+Logger::Logger(const std::string& name, LogLevel minLevel) : _name(name), _minLogLevel(minLevel)
 {
 
 }
-Logger::Logger(const Logger& copy) : _minLogLevel(copy._minLogLevel)
+Logger::Logger(const Logger& copy) : _name(copy._name), _minLogLevel(copy._minLogLevel)
 {
-    //TODO : for each appender in map do a copy of the object behind the pointer
+    // for each appender in map do a copy of the object behind the pointer
     //because just copy the map will cause failure due to pointer
+    std::map<std::string,Appender*>::iterator it = copy._appendersMap.begin();
+    for(it;it!=copy._appendersMap.end();it++)
+    {
+        _appendersMap.insert(std::make_pair(it->first,new Appender(*it->second)));
+    }
 }
-Logger::Logger(Logger&& moved) : _minLogLevel(moved._minLogLevel), _appendersMap(std::move(moved.Move()))
+Logger::Logger(Logger&& moved) : _name(moved._name), _minLogLevel(moved._minLogLevel), _appendersMap(std::move(moved.Move()))
 {
 
 }
@@ -25,6 +31,29 @@ Logger::~Logger()
 }
 std::map<std::string,Appender*>&& Logger::Move()
 {
+    _name = "";
     _minLogLevel = 0;
     return std::move(_appendersMap);
+}
+bool Logger::shouldLogLevel(const LogLevel& levelToTest)
+{
+    if(levelToTest<_minLogLevel)
+    {
+        return false;
+    }
+    return true;
+}
+const std::string& Logger::getName()
+{
+    return _name;
+}
+void Logger::write(LogContent& content)
+{
+    for(AppenderMap::iterator it = _appenders.begin();it!=_appenders.end();it++)
+    {
+        if(it->second->shouldLogLevel(content.getLevel()))
+        {
+            it->second->Write(msg);
+        }
+    }
 }

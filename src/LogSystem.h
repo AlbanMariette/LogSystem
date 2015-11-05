@@ -17,7 +17,7 @@ public:
     std::map<std::string,Logger*>&& Move();
     bool addLogger(Logger* logger);
     bool deleteLogger(Logger* logger);
-    bool deleteLogger(std::string& name);
+    bool deleteLogger(const std::string& name);
     /*ECRITURE*/
     template <class ... Args>
     void trace(const std::string& name,Args &&... args)
@@ -45,6 +45,14 @@ public:
         write(name,LogLevel::LEVEL_CRITICAL,std::forward<Args>(args)...);
     }
 private:
+    /*
+    @fn
+    @params name une reference constante sur une chaine de caractere
+    @brief methode permettant de recuperer un pointeur sur un logger.
+            le pointeur renvoyé n'appartient pas à l'appelant.
+    @return Logger*
+    */
+    Logger* GetLogger(const std::string& name);
     /*ecriture generale*/
     template <class ... Args>
     void write(const std::string& name,LogLevel& level,Args &&... args)
@@ -69,6 +77,8 @@ private:
     void writeOnLogger(const std::string& name,std::unique_ptr<LogMessage>& msg);
     /*map contenant les loggers classés selon leur nom*/
     std::map<std::string,Logger*> _loggersMap;
+    /*booleen : true si le systeme est asynchrone ou false si synchrone*/
+    bool _isAsync;
 
 };
 
