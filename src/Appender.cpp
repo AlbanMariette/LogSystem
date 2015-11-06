@@ -2,7 +2,7 @@
 #include "Logger.h"
 #include "LogContent.h"
 
-Appender::Appender(LogLevel level) : _minLogLevel(level)
+Appender::Appender(const std::string& name, LogLevel level) : _name(name), _minLogLevel(level)
 {
 
 }
@@ -29,4 +29,9 @@ bool Appender::shouldLogLevel(LogLevel levelToLog)
         return false;
     }
     return true;
+}
+
+const std::string& Appender::getName() const
+{
+    return _name;
 }

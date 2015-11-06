@@ -10,12 +10,13 @@ class Appender
 {
 public:
     /*
-    @fn Appender(LogLevel level)
-    @params level le niveau minimum de log
+    @fn Appender(const std::string& name,LogLevel level)
+    @params name reference constante sur une chaine de caractere representant le nom de l'appender
+            level le niveau minimum de log
     @brief constructeur
     @return no return
     */
-    Appender(LogLevel level);
+    Appender(const std::string& name, LogLevel level);
     /*
     @fn Appender(const Appender& coy)
     @params copy une reference constante sur un objet Appender à copier
@@ -51,9 +52,12 @@ public:
     @return void
     */
     virtual void write(LogContent& content)=0;
+    const std::string& getName() const;
 private:
     /*le niveau minimum de log*/
     LogLevel _minLogLevel;
+    /*le nom de l'appender*/
+    std::string _name;
 
 };
 #endif
