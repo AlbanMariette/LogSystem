@@ -61,6 +61,27 @@ public:
     */
     std::map<std::string,Appender*>&& Move();
     /*
+    @fn bool addAppender(Appender* appender)
+    @params appender pointeur sur l'objet Appender à ajouter. (La classe Logger en devient responsable)
+    @brief methode permettant d'ajouter un appender
+    @return bool true si l'ajout a réussi, false sinon
+    */
+    bool addAppender(Appender* appender);
+    /*
+    @fn bool delAppender(Appender* appender)
+    @params appender pointeur sur l'objet Appender à supprimer.
+    @brief methode permettant de supprimer un appender
+    @return bool true si la deletion a réussie, false sinon (appender inexistant)
+    */
+    bool delAppender(Appender* appender);
+    /*
+    @fn bool delAppender(const std::string& name)
+    @params name reference constante sur le nom de l'appender
+    @brief methode permettant de supprimer un appender
+    @return bool true si la deletion a réussie, false sinon (appender inexistant)
+    */
+    bool delAppender(const std::string& name);
+    /*
     @fn bool shouldLogLevel(const LogLevel& levelToTest)
     @params no params
     @brief methode permettant de vérifier si un niveau de log est accepté ou non
@@ -81,6 +102,13 @@ public:
     @return void
     */
     void write(LogContent& content);
+    /*
+    @fn void writeAsync(LogContent& content)
+    @params content reference sur un objet LogContent
+    @brief methode permettant de logger un contenu de façon asynchrone
+    @return void
+    */
+    void writeAsync(LogContent& content);
 private:
     /*le nom du logger*/
     std::string _name;

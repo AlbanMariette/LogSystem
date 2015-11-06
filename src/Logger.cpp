@@ -35,6 +35,27 @@ std::map<std::string,Appender*>&& Logger::Move()
     _minLogLevel = 0;
     return std::move(_appendersMap);
 }
+bool Logger::addAppender(Appender* appender)
+{
+    if(!appender)
+        return false;
+    _appendersMap.insert(std::make_pair(appender->getName(),appender));
+    return true;
+}
+bool Logger::delAppender(Appender* appender)
+{
+    return delAppender(appender->getName());
+}
+bool Logger::delAppender(const std::string& name)
+{
+    std::map<std::string,Appender*>::iterator it = _appendersMap.find(name);
+    if(it!=_apendersMap.end())
+    {
+        delete it->second;
+        return true;
+    }
+    return false;
+}
 bool Logger::shouldLogLevel(const LogLevel& levelToTest)
 {
     if(levelToTest<_minLogLevel)
@@ -56,4 +77,8 @@ void Logger::write(LogContent& content)
             it->second->Write(msg);
         }
     }
+}
+void Logger::writeAsync(LogContent& content)
+{
+    std::async(&Logger::write,this,content);
 }

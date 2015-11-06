@@ -74,6 +74,10 @@ void LogSystem::writeOnLogger(const std::string& name,std::unique_ptr<LogMessage
     {
         return;
     }
+    if(_isAsync)
+    {
+        temp->writeAsync(msg.get());
+    }
     else
         temp->write(msg.get());
 }
