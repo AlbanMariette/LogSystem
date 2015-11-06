@@ -52,6 +52,12 @@ public:
     @return void
     */
     virtual void write(LogContent& content)=0;
+    /*
+    @fn const std::string& getName() const
+    @params no params
+    @brief methode retournant le nom de l'appender
+    return const std::string&
+    */
     const std::string& getName() const;
 private:
     /*le niveau minimum de log*/
