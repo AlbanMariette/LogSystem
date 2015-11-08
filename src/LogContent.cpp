@@ -1,5 +1,5 @@
-#include "LogContent.cpp"
-LogContent::LogContent(std::string& level) : _logLevel(level)
+#include "LogContent.h"
+LogContent::LogContent(LogLevel level, std::string& content) : _logLevel(level), _content(content)
 {
 }
 LogContent::LogContent(const LogContent& copy) : _logLevel(copy._logLevel), _content(copy._content)
@@ -16,7 +16,6 @@ LogContent::~LogContent()
 }
 std::string&& LogContent::Move()
 {
-    _logLevel = 0;
     return std::move(_content);
 }
 const LogLevel& LogContent::getLevel() const

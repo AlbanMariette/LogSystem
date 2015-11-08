@@ -12,12 +12,12 @@ class LogContent
 {
 public:
     /*
-    @fn LogContent(LogLevel& level,std::string& content)
-    @params level une reference sur le niveau de log de l'objet
+    @fn LogContent(LogLevel level,std::string& content)
+    @params level le le niveau de log de l'objet
             content une reference sur une chaine de caractere representant l'objet à logger
     @brief constructeur
     */
-    LogContent(LogLevel& level,std::string& content);
+    LogContent(LogLevel level,std::string& content);
     /*
     @fn LogContent(const LogContent& copy)
     @params copy reference constante sur un autre objet à copier

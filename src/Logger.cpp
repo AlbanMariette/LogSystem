@@ -1,6 +1,8 @@
+#include <future>
 #include "Logger.h"
 #include "LogContent.h"
-#include "Appender.h"
+#include "ConsoleAppender.h"
+
 Logger::Logger(const std::string& name, LogLevel minLevel) : _name(name), _minLogLevel(minLevel)
 {
 
@@ -9,10 +11,14 @@ Logger::Logger(const Logger& copy) : _name(copy._name), _minLogLevel(copy._minLo
 {
     // for each appender in map do a copy of the object behind the pointer
     //because just copy the map will cause failure due to pointer
-    std::map<std::string,Appender*>::iterator it = copy._appendersMap.begin();
+    std::map<std::string,Appender*>::const_iterator it = copy._appendersMap.begin();
     for(it;it!=copy._appendersMap.end();it++)
     {
-        _appendersMap.insert(std::make_pair(it->first,new Appender(*it->second)));
+		if (it->second->getType() == AppenderType::CONSOLE_APPENDER)
+		{
+			_appendersMap.insert(std::make_pair(it->first, new ConsoleAppender(dynamic_cast<ConsoleAppender&>(*it->second))));
+		}
+        
     }
 }
 Logger::Logger(Logger&& moved) : _name(moved._name), _minLogLevel(moved._minLogLevel), _appendersMap(std::move(moved.Move()))
@@ -32,7 +38,6 @@ Logger::~Logger()
 std::map<std::string,Appender*>&& Logger::Move()
 {
     _name = "";
-    _minLogLevel = 0;
     return std::move(_appendersMap);
 }
 bool Logger::addAppender(Appender* appender)
@@ -49,7 +54,7 @@ bool Logger::delAppender(Appender* appender)
 bool Logger::delAppender(const std::string& name)
 {
     std::map<std::string,Appender*>::iterator it = _appendersMap.find(name);
-    if(it!=_apendersMap.end())
+    if(it!=_appendersMap.end())
     {
         delete it->second;
         return true;
@@ -70,11 +75,11 @@ const std::string& Logger::getName()
 }
 void Logger::write(LogContent& content)
 {
-    for(AppenderMap::iterator it = _appenders.begin();it!=_appenders.end();it++)
+    for(std::map<std::string,Appender*>::iterator it = _appendersMap.begin();it!=_appendersMap.end();it++)
     {
         if(it->second->shouldLogLevel(content.getLevel()))
         {
-            it->second->Write(msg);
+            it->second->write(content);
         }
     }
 }

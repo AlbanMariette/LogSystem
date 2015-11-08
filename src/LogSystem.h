@@ -2,7 +2,10 @@
 #define LOG_SYSTEM_H
 /*INCLUSIONS*/
 #include <map>
+#include <memory>
+#include <sstream>
 #include "Logger.h"
+#include "LogContent.h"
 /*FIN INCLUSIONS*/
 class LogSystem
 {
@@ -55,12 +58,11 @@ private:
     Logger* GetLogger(const std::string& name);
     /*ecriture generale*/
     template <class ... Args>
-    void write(const std::string& name,LogLevel& level,Args &&... args)
+    void write(const std::string& name,LogLevel level,Args &&... args)
     {
-        cout << "Inmpression de " << sizeof...(Args) << " parametres: ";
         std::ostringstream stream;
 		print(stream, std::forward<Args>(args)...);
-        std::unique_ptr<LogContent> msg(new LogContent(level,stream));
+        std::unique_ptr<LogContent> msg(new LogContent(level,stream.str()));
         writeOnLogger(name,msg);
     }
     template <class T, class ... Args>
@@ -74,7 +76,7 @@ private:
 	{
 		stream <<val;
 	}
-    void writeOnLogger(const std::string& name,std::unique_ptr<LogMessage>& msg);
+    void writeOnLogger(const std::string& name,std::unique_ptr<LogContent>& msg);
     /*map contenant les loggers classés selon leur nom*/
     std::map<std::string,Logger*> _loggersMap;
     /*booleen : true si le systeme est asynchrone ou false si synchrone*/

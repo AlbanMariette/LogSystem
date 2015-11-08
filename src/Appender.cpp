@@ -24,7 +24,7 @@ Appender::~Appender()
 
 bool Appender::shouldLogLevel(LogLevel levelToLog)
 {
-    if(levelToTest<_minLogLevel)
+    if(levelToLog<_minLogLevel)
     {
         return false;
     }
@@ -34,4 +34,8 @@ bool Appender::shouldLogLevel(LogLevel levelToLog)
 const std::string& Appender::getName() const
 {
     return _name;
+}
+const AppenderType& Appender::getType() const
+{
+	return _appenderType;
 }

@@ -2,8 +2,9 @@
 #define CONSOLE_APPENDER_H
 /*INCLUSIONS*/
 #include "Appender.h"
+#include <string>
+enum LogLevel;
 /*FIN INCLUSIONS*/
-
 class ConsoleAppender : public Appender
 {
 public:
@@ -14,7 +15,7 @@ public:
     @brief constructeur
     @return no return
     */
-    ConsoleAppender(const std::string& name, LogLevel level);
+	ConsoleAppender(const std::string& name, LogLevel level);
     /*
     @fn ConsoleAppender(const ConsoleAppender& coy)
     @params copy une reference constante sur un objet ConsoleAppender à copier
@@ -28,7 +29,7 @@ public:
     @brief constructeur de déplacement
     @return no return
     */
-    ConsoleAppender(ConsoleAppender&& moved);
+	ConsoleAppender(ConsoleAppender&& moved) = delete;
     /*
     @fn virtual void write(LogContent& content)
     @params content une reference sur un objet LogContent à traiter

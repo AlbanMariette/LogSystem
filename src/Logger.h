@@ -1,20 +1,24 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 /*INCLUSIONS*/
+#include <map>
 /*FIN INCLUSIONS*/
 class LogContent;
 class Appender;
 /*
 @enum LogLevel
 @brief enumeration representant les niveaux de log
+        toujours garder le MIN_LOG_LEVEL et MAX_LOG_LEVEL, ils sont important pour le soutien des couleurs
 */
 enum LogLevel
 {
+    MIN_LOG_LEVEL,
     LEVEL_TRACE,
     LEVEL_INFO,
     LEVEL_WARNING,
     LEVEL_ERROR,
-    LEVEL_CRITICAL
+    LEVEL_CRITICAL,
+    MAX_LOG_LEVEL
 
 };
 /*

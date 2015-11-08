@@ -1,5 +1,5 @@
 #include "LogSystem.h"
-
+#include "LogContent.h"
 
 LogSystem::LogSystem() : _loggersMap(), _isAsync(false)
 {
@@ -11,11 +11,11 @@ LogSystem::LogSystem(bool async): _loggersMap(), _isAsync(async)
 }
 LogSystem::LogSystem(const LogSystem& copy) : _isAsync(copy._isAsync)
 {
-    std::map<std::string,Logger*>::iterator it = copy._loggersMap.begin();
+    std::map<std::string,Logger*>::const_iterator it = copy._loggersMap.begin();
     for(it;it!=copy._loggersMap.end();it++)
     {
         _loggersMap.insert(std::make_pair(it->first,new Logger(*it->second)));
-    }s
+    }
 }
 LogSystem::LogSystem(LogSystem&& moved) : _isAsync(moved._isAsync), _loggersMap(std::move(moved.Move()))
 {
@@ -58,7 +58,7 @@ bool LogSystem::deleteLogger(const std::string& name)
     }
     return false;
 }
-Logger* Logger::GetLogger(const std::string& name)
+Logger* LogSystem::GetLogger(const std::string& name)
 {
     std::map<std::string,Logger*>::iterator it = _loggersMap.find(name);
     if(it!=_loggersMap.end())
@@ -67,17 +67,17 @@ Logger* Logger::GetLogger(const std::string& name)
     }
     return nullptr;
 }
-void LogSystem::writeOnLogger(const std::string& name,std::unique_ptr<LogMessage>& msg)
+void LogSystem::writeOnLogger(const std::string& name,std::unique_ptr<LogContent>& content)
 {
     Logger* temp = GetLogger(name);
-    if(!temp||!temp->shouldLogLevel(msg.getLevel()))
+    if(!temp||!temp->shouldLogLevel(content.get()->getLevel()))
     {
         return;
     }
     if(_isAsync)
     {
-        temp->writeAsync(msg.get());
+        temp->writeAsync(*content.get());
     }
     else
-        temp->write(msg.get());
+        temp->write(*content.get());
 }

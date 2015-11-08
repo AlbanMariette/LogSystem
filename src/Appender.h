@@ -1,11 +1,28 @@
 #ifndef APPENDER_H
 #define APPENDER_H
 /*INCLUSIONS*/
-
-/*FIN INCLUSIONS*/
-class LogContent;
+#include <string>
 class Logger;
 enum LogLevel;
+/*FIN INCLUSIONS*/
+class LogContent;
+/*
+@enum AppenderFlag
+@brief enumeration des flag que peuvent avoir les appenders
+*/
+enum AppenderFlag
+{
+
+
+};
+/*
+@enum AppenderType
+@brief enumeration utilisée pour la copie des Appender
+*/
+enum AppenderType
+{
+	CONSOLE_APPENDER
+};
 class Appender
 {
 public:
@@ -59,11 +76,20 @@ public:
     return const std::string&
     */
     const std::string& getName() const;
-private:
+	/*
+	@fn const AppenderType& getType() const
+	@params no params
+	@brief methode retournant le type de l'appender
+	return const AppenderType&
+	*/
+	const AppenderType& getType() const;
+protected:
     /*le niveau minimum de log*/
     LogLevel _minLogLevel;
     /*le nom de l'appender*/
     std::string _name;
+	/*le type d'appender*/
+	AppenderType _appenderType;
 
 };
 #endif
